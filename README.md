@@ -1,6 +1,8 @@
 # WAK-Tool
 Wilder Army Knife
 
+Outputs various DNS records including some webhosting and registrar information, with a single command input
+
 -DNS Lookup (All in one lookup that returns <br>
 --WHOIS: <br>
 ---Registrar <br>
