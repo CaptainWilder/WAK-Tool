@@ -1,13 +1,10 @@
-# WAK-Tool
-Wilder Army Knife
+Portable Multi-Cloud Initialization Service
+===========================================
 
-Outputs various DNS records including some webhosting and registrar information, with a single command input
+* Author:         Nautilus Online
+* Contact:        wilder@nautilus.online
+* Home page:      http://www.nautilus.online/
 
--DNS Lookup (All in one lookup that returns <br>
---WHOIS: <br>
----Registrar <br>
---DNS <br>
----A Record for www and root <br>
----MX Record  <br>
----dns 'any' check for response <br>
---webpage pull to find website type (wordpress, flat html, etc) <br>
+* Documentation:  Coming soon
+* Source:         https://github.com/CaptainWilder/WAK-Tool
+* License:        idk, I'm not a lawyer
