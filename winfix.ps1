@@ -3,6 +3,11 @@
 #          Fix Windows n shit                #
 ##############################################
 
+###How to Properly run: 
+#Open Powershell
+#cd to directory where winfix.ps1 lives
+#PowerShell -ExecutionPolicy Bypass -File ./winfix.ps1
+
 ###Perms Check
 If (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
 {
