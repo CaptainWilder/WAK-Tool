@@ -52,6 +52,10 @@ Write-Output "Resetting Winsock..."
 netsh winsock reset
 
 
+###CHKDSK
+Write-Output "Creating task for disk check..."
+chkdsk /f /r
+
 ###FINISH
 Write-Output "Windows repair tasks have been completed."
 $userChoice = Read-Host "Do you want to reboot now? (Y/N)"
