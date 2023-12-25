@@ -83,15 +83,32 @@ else
 fi
 
 
-#Output
+#Function to format multiline output
+format_output() {
+    local label=$1
+    local text=$2
+    local first_line=true
+
+    # Read each line of the variable
+    while IFS= read -r line; do
+        if [ "$first_line" = true ] ; then
+            printf "%-25s %s\n" "$label" "$line"
+            first_line=false
+        else
+            printf "%-25s %s\n" "" "$line"
+        fi
+    done <<< "$text"
+}
+
+# Output
 echo "----------------------- DNS & SSL Details -----------------------"
-printf "%-25s %s\n" "IP:" "$ip"
-printf "%-25s %s\n" "WebHost:" "$org"
-printf "%-25s %s\n" "Registrar:" "$registrar"
-printf "%-25s %s\n" "CNAME record:" "$cname"
-printf "%-25s %s\n" "MX record:" "$mx"
-printf "%-25s %s\n" "NS records:" "$ns"
-printf "%-25s %s\n" "SPF:" "$txt"
-printf "%-25s %s\n" "SSL Certificate Expiration:" "$ssl_expiry"
-printf "%-25s %s\n" "SSL Certificate Issuer:" "$ssl_issuer"
-echo "---------------------------------------------------------------"
+format_output "IP:" "$ip"
+format_output "WebHost:" "$org"
+format_output "Registrar:" "$registrar"
+format_output "CNAME record:" "$cname"
+format_output "MX record:" "$mx"
+format_output "NS records:" "$ns"
+format_output "SPF:" "$txt"
+format_output "SSL Certificate Expiration:" "$ssl_expiry"
+format_output "SSL Certificate Issuer:" "$ssl_issuer"
+echo "----------------------------------------------------------------"
