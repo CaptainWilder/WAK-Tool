@@ -5,11 +5,11 @@
 #######################
 
 
-#for debug, uncomment echos 
+#Uncomment echos for debug
+#echo "Loading..."
 
-echo "Loading..."
+
 #Prereq Check
-#echo "Checking for prereqs..." #Enable Debug
 install_whois() {
   if which whois >/dev/null; then
     echo "" #add text for debug, otherwise leave blank
@@ -36,34 +36,23 @@ if [ -z "$1" ]; then
   echo "Usage: poke.sh DOMAIN"
   exit 1
 fi
-
-
 DOMAIN="$1"
 
-
-#debug 
-#echo "Loading..."
 
 #DNS Lookups
 #A record lookup and get the IP
 ip=$(dig +short A "$DOMAIN")
 ip_org=$(echo "$ip" | head -n1 )
-
 #Whois lookup on the IP and extract the Organization field
 org=$(whois "$ip_org" | grep 'OrgName:' | awk '{$1=""; print substr($0,2)}')
-
 #MX record lookup
 mx=$(dig +short MX "$DOMAIN")
-
 #NS record lookup
 ns=$(dig +short NS "$DOMAIN")
-
 #CNAME record lookup
 cname=$(dig +short CNAME "www.$DOMAIN")
-
 #TXT record lookup
 txt=$(dig +short TXT "$DOMAIN" | grep spf)
-
 #WHOIS search and extract the registrar name
 registrar=$(whois "$DOMAIN" | grep -m 1 'Registrar:' | awk '{$1=""; print substr($0,2)}')
 
@@ -71,6 +60,7 @@ registrar=$(whois "$DOMAIN" | grep -m 1 'Registrar:' | awk '{$1=""; print substr
 #debug
 #echo "Got dns..."
 #echo "Loading SSL..."
+
 
 #HTTPS Check
 if ! curl --output /dev/null --silent --head --fail --connect-timeout 5 "https://$DOMAIN"; then
