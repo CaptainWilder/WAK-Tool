@@ -55,6 +55,9 @@ txt=$(dig +short TXT "$DOMAIN" | grep spf)
 # Retrieve domain registrar from whois
 registrar=$(whois "$DOMAIN" | grep -m 1 'Registrar:' | awk '{$1=""; print substr($0,2)}')
 
+# Check SSH
+ssh=$(nc -z -v -w5 "$DOMAIN" 22)
+
 # Check for HTTPS availability
 if ! curl --output /dev/null --silent --head --fail --connect-timeout 5 "https://$DOMAIN"; then
   echo "No HTTPS available, or the domain is not reachable."
@@ -89,4 +92,5 @@ print_with_color "NS records" "$ns"
 print_with_color "CNAME record" "$cname"
 print_with_color "MX record" "$mx"
 print_with_color "SPF" "$txt"
+print_with_color "SSH Response" "$ssh"
 echo "-----------------------------------------------------------------"
