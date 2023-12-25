@@ -84,12 +84,14 @@ fi
 
 
 #Output
-echo "IP: $ip"
-echo "WebHost: $org"
-echo "$registrar"
-echo "CNAME record: $cname"
-echo "MX record: $mx"
-echo "NS records: $ns"
-echo "SPF: $txt"
-echo "SSL Certificate Expiration: $ssl_expiry"
-echo "SSL Certificate Issuer: $ssl_issuer"
+echo "----------------------- DNS & SSL Details -----------------------"
+printf "%-25s %s\n" "IP:" "$ip"
+printf "%-25s %s\n" "WebHost:" "$org"
+printf "%-25s %s\n" "Registrar:" "$registrar"
+printf "%-25s %s\n" "CNAME record:" "$cname"
+printf "%-25s %s\n" "MX record:" "$mx"
+printf "%-25s %s\n" "NS records:" "$ns"
+printf "%-25s %s\n" "SPF:" "$txt"
+printf "%-25s %s\n" "SSL Certificate Expiration:" "$ssl_expiry"
+printf "%-25s %s\n" "SSL Certificate Issuer:" "$ssl_issuer"
+echo "---------------------------------------------------------------"
