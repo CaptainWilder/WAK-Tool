@@ -4,7 +4,6 @@
 ######DNS Tools########
 #######################
 
-
 #Prereq Check
 install_whois() {
   if which whois >/dev/null; then
@@ -22,38 +21,43 @@ install_whois() {
   fi
 }
 
-
 #Install Prereq
 install_whois
 
-
 #Get Input/Argument
 if [ -z "$1" ]; then
-          echo "Usage: poke.sh DOMAIN"
-            exit 1
+  echo "Usage: poke.sh DOMAIN"
+  exit 1
 fi
 
+DOMAIN="$1"
+
 #A record lookup and get the IP
-ip=$(dig +short A "$1")
+ip=$(dig +short A "$DOMAIN")
 ip_org=$(echo "$ip" | head -n1 )
 
 #Whois lookup on the IP and extract the Organization field
 org=$(whois "$ip_org" | grep 'Organization:' | awk '{print $2}')
 
 #MX record lookup
-mx=$(dig +short MX "$1")
+mx=$(dig +short MX "$DOMAIN")
 
 #NS record lookup
-ns=$(dig +short NS "$1")
+ns=$(dig +short NS "$DOMAIN")
 
 #CNAME record lookup
-cname=$(dig +short CNAME "www.$1")
+cname=$(dig +short CNAME "www.$DOMAIN")
 
 #TXT record lookup
-txt=$(dig +short TXT "$1" | grep spf)
+txt=$(dig +short TXT "$DOMAIN" | grep spf)
 
 #WHOIS search and extract the registrar name
-registrar=$(whois "$1" | grep -m 1 'Registrar:' | awk '{$1=$1;print}')
+registrar=$(whois "$DOMAIN" | grep -m 1 'Registrar:' | awk '{$1=$1;print}')
+
+#SSL certificate expiration and issuer details
+echo | openssl s_client -servername "$DOMAIN" -connect "$DOMAIN:443" 2>/dev/null | openssl x509 -noout -dates -issuer > ssl_details.txt
+ssl_dates=$(grep -e 'notBefore' -e 'notAfter' ssl_details.txt)
+ssl_issuer=$(grep 'issuer' ssl_details.txt)
 
 #Output
 echo "IP: $ip"
@@ -63,3 +67,8 @@ echo "CNAME record: $cname"
 echo "MX record: $mx"
 echo "NS records: $ns"
 echo "SPF: $txt"
+echo "SSL Certificate Dates: $ssl_dates"
+echo "SSL Certificate Issuer: $ssl_issuer"
+
+#Clean up temporary file
+rm ssl_details.txt
