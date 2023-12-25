@@ -1,16 +1,20 @@
 Wilder Army Knife toolkit
 ===========================================
 
-* Author:         Captain Wilder
-* Contact:        wilder@nautilus.online
-* Home page:      http://www.nautilus.online/
+Author:         Captain Wilder
 
-* Documentation:  Coming soon
-* Source:         https://github.com/CaptainWilder/WAK-Tool
-* License:        idk bro, I'm not a lawyer
+Contact:        wilder@nautilus.online
+
+Home page:      http://www.nautilus.online/
 
 
+Documentation:  Coming soon
 
-DNS Tool = poke.sh
+Source:         https://github.com/CaptainWilder/WAK-Tool
 
-Windows repair tool = winfix.ps1
+License:        idk bro, I'm not a lawyer
+
+
+
+* DNS Tool = poke.sh
+* Windows repair tool = winfix.ps1
