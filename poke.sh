@@ -5,6 +5,7 @@
 #######################
 
 #Prereq Check
+echo "Checking prerequisites..."
 install_whois() {
   if which whois >/dev/null; then
     echo "whois is already installed."
@@ -32,6 +33,8 @@ fi
 
 DOMAIN="$1"
 
+
+echo "Loading..."
 #A record lookup and get the IP
 ip=$(dig +short A "$DOMAIN")
 ip_org=$(echo "$ip" | head -n1 )
