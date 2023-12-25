@@ -1,88 +1,84 @@
 #!/bin/bash
-#######################
-###Wilder Army Knife###
-######DNS Tools########
-#######################
 
-
-#Uncomment echos for debug
-#echo "Loading..."
-
-
-#Prereq Check
+# ==============================================================
+# ||                   DNS Tool                               ||
+# ||               Wilder Army Knife                          ||
+# ||            Written by Captain Wilder                     ||
+# ==============================================================
+#
+# Check and install 'whois' if not present
 install_whois() {
   if which whois >/dev/null; then
-    echo "" #add text for debug, otherwise leave blank
+    # whois is already installed, no action required
+    true 
   else
-    echo "whois not found. Installing..."
+    echo "Installing whois..."
     if [[ ! -z $(which yum) ]]; then
       sudo yum install whois -y
     elif [[ ! -z $(which apt) ]]; then
       sudo apt-get install whois -y
     else
-      #echo "Neither yum nor apt is available. Cannot install whois."
+      echo "Error: Package manager not found. Cannot install 'whois'."
       exit 1
     fi
   fi
 }
-
-
-#Install Prereq
 install_whois
 
-
-#Get Input/Argument
+# Ensure a domain is provided
 if [ -z "$1" ]; then
-  echo "Usage: poke.sh DOMAIN"
+  echo "Usage: poke.sh <domain>"
   exit 1
 fi
 DOMAIN="$1"
 
-
-#DNS Lookups
-#A record lookup and get the IP
+# Perform DNS Lookups
+# Retrieve A record
 ip=$(dig +short A "$DOMAIN")
 ip_org=$(echo "$ip" | head -n1 )
-#Whois lookup on the IP and extract the Organization field
+
+# Lookup organization details from whois
 org=$(whois "$ip_org" | grep 'OrgName:' | awk '{$1=""; print substr($0,2)}')
-#MX record lookup
+
+# Retrieve MX record
 mx=$(dig +short MX "$DOMAIN")
-#NS record lookup
+
+# Retrieve NS records
 ns=$(dig +short NS "$DOMAIN")
-#CNAME record lookup
+
+# Retrieve CNAME record
 cname=$(dig +short CNAME "www.$DOMAIN")
-#TXT record lookup
+
+# Retrieve TXT record for SPF
 txt=$(dig +short TXT "$DOMAIN" | grep spf)
-#WHOIS search and extract the registrar name
+
+# Retrieve domain registrar from whois
 registrar=$(whois "$DOMAIN" | grep -m 1 'Registrar:' | awk '{$1=""; print substr($0,2)}')
 
-
-#debug
-#echo "Got dns..."
-#echo "Loading SSL..."
-
-
-#HTTPS Check
+# Check for HTTPS availability
 if ! curl --output /dev/null --silent --head --fail --connect-timeout 5 "https://$DOMAIN"; then
-  echo "HTTPS not enabled or the domain is not reachable."
+  echo "No HTTPS available, or the domain is not reachable."
   ssl_expiry="no SSL"
   ssl_issuer="no SSL"
 else
+  # Fetch SSL details
   ssl_output=$(echo | openssl s_client -servername "$DOMAIN" -connect "$DOMAIN:443" 2>/dev/null | openssl x509 -noout -dates -issuer)
   ssl_expiry=$(echo "$ssl_output" | grep 'notAfter' | awk -F= '{print $2}')
   ssl_issuer=$(echo "$ssl_output" | grep 'issuer=' | sed -n 's/.*O = \(.*\), CN = .*/\1/p')
 fi
 
-
-#Output
-#Define color variables
+# Output formatting and display
 RED="\033[31m"
 RESET="\033[0m"
+
+# Function to print details in color
 print_with_color() {
     local label=$1
     local value=$2
-    echo -e "${RED}${label}:${RESET}\n${value}"
+    echo -e "${RED}${label}:${RESET}\n    ${value}"
 }
+
+# Display all collected data
 echo "----------------------- DNS & SSL Details -----------------------"
 print_with_color "WebHost" "$org"
 print_with_color "Registrar" "$registrar"
