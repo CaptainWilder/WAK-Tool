@@ -75,14 +75,22 @@ fi
 
 
 #Output
+#Define color variables
+RED="\033[31m"
+RESET="\033[0m"
+print_with_color() {
+    local label=$1
+    local value=$2
+    echo -e "${RED}${label}:${RESET}\n${value}"
+}
 echo "----------------------- DNS & SSL Details -----------------------"
-echo -e "\033[31mWebHost: \033[0m\n$org" #WebHost
-echo -e "\033[31mRegistrar: \033[0m\n$registrar" #Registrar
-echo -e "\033[31mSSL Expiration: \033[0m\n$ssl_expiry" #SSL Expiration 
-echo -e "\033[31mSSL Issuer: \033[0m\n$ssl_issuer" #SSL Issuer 
-echo -e "\033[31mIP: \033[0m\n$ip" #IP
-echo -e "\033[31mNS records: \033[0m\n$ns" #NS
-echo -e "\033[31mCNAME record: \033[0m\n$cname" #CNAME
-echo -e "\033[31mMX record: \033[0m\n$mx" #MX
-echo -e "\033[31mSPF: \033[0m\n$txt" #SPF
+print_with_color "WebHost" "$org"
+print_with_color "Registrar" "$registrar"
+print_with_color "SSL Expiration" "$ssl_expiry"
+print_with_color "SSL Issuer" "$ssl_issuer"
+print_with_color "IP" "$ip"
+print_with_color "NS records" "$ns"
+print_with_color "CNAME record" "$cname"
+print_with_color "MX record" "$mx"
+print_with_color "SPF" "$txt"
 echo "-----------------------------------------------------------------"
