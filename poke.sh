@@ -85,13 +85,13 @@ fi
 
 #Output
 echo "----------------------- DNS & SSL Details -----------------------"
-echo -e "\033[31mIP: \033[0m\n$ip"
-echo -e "\033[31mWebHost: \033[0m\n$org"
-echo -e "\033[31mRegistrar: \033[0m\n$registrar"
-echo -e "\033[31mCNAME record: \033[0m\n$cname"
-echo -e "\033[31mMX record: \033[0m\n$mx"
-echo -e "\033[31mNS records: \033[0m\n$ns"
-echo -e "\033[31mSPF: \033[0m\n$txt"
-echo -e "\033[31mSSL Expiration: \033[0m\n$ssl_expiry"
-echo -e "\033[31mSSL Issuer: \033[0m\n$ssl_issuer"
+echo -e "\033[31mWebHost: \033[0m\n$org" #WebHost
+echo -e "\033[31mRegistrar: \033[0m\n$registrar" #Registrar
+echo -e "\033[31mSSL Expiration: \033[0m\n$ssl_expiry" #SSL Expiration 
+echo -e "\033[31mSSL Issuer: \033[0m\n$ssl_issuer" #SSL Issuer 
+echo -e "\033[31mIP: \033[0m\n$ip" #IP
+echo -e "\033[31mNS records: \033[0m\n$ns" #NS
+echo -e "\033[31mCNAME record: \033[0m\n$cname" #CNAME
+echo -e "\033[31mMX record: \033[0m\n$mx" #MX
+echo -e "\033[31mSPF: \033[0m\n$txt" #SPF
 echo "---------------------------------------------------------------"
