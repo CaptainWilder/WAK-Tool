@@ -55,9 +55,9 @@ txt=$(dig +short TXT "$DOMAIN" | grep spf)
 registrar=$(whois "$DOMAIN" | grep -m 1 'Registrar:' | awk '{$1=$1;print}')
 
 #SSL certificate expiration and issuer details
-echo | openssl s_client -servername "$DOMAIN" -connect "$DOMAIN:443" 2>/dev/null | openssl x509 -noout -dates -issuer > ssl_details.txt
-ssl_dates=$(grep -e 'notBefore' -e 'notAfter' ssl_details.txt)
-ssl_issuer=$(grep 'issuer' ssl_details.txt)
+ssl_output=$(echo | openssl s_client -servername "$DOMAIN" -connect "$DOMAIN:443" 2>/dev/null | openssl x509 -noout -dates -issuer)
+ssl_expiry=$(echo "$ssl_output" | grep 'notAfter' | awk -F= '{print $2}')
+ssl_issuer=$(echo "$ssl_output" | grep 'issuer=' | sed -n 's/.*O = \(.*\), CN = .*/\1/p')
 
 #Output
 echo "IP: $ip"
@@ -67,8 +67,5 @@ echo "CNAME record: $cname"
 echo "MX record: $mx"
 echo "NS records: $ns"
 echo "SPF: $txt"
-echo "SSL Certificate Dates: $ssl_dates"
+echo "SSL Certificate Expiration: $ssl_expiry"
 echo "SSL Certificate Issuer: $ssl_issuer"
-
-#Clean up temporary file
-rm ssl_details.txt
