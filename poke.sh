@@ -5,6 +5,28 @@
 #######################
 
 
+#Prereq Check
+install_whois() {
+  if which whois >/dev/null; then
+    echo "whois is already installed."
+  else
+    echo "whois not found. Installing..."
+    if [[ ! -z $(which yum) ]]; then
+      sudo yum install whois -y
+    elif [[ ! -z $(which apt) ]]; then
+      sudo apt-get install whois -y
+    else
+      echo "Neither yum nor apt is available. Cannot install whois."
+      exit 1
+    fi
+  fi
+}
+
+
+#Install Prereq
+install_whois
+
+
 #Get Input/Argument
 if [ -z "$1" ]; then
           echo "Usage: poke.sh DOMAIN"
