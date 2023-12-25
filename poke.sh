@@ -56,7 +56,7 @@ txt=$(dig +short TXT "$DOMAIN" | grep spf)
 registrar=$(whois "$DOMAIN" | grep -m 1 'Registrar:' | awk '{$1=""; print substr($0,2)}')
 
 # Check SSH
-ssh=$(nc -z -v -w5 "$DOMAIN" 22)
+ssh=$(nc -z -v -w5 "$DOMAIN" 22 2>&1)
 
 # Check for HTTPS availability
 if ! curl --output /dev/null --silent --head --fail --connect-timeout 5 "https://$DOMAIN"; then
@@ -78,7 +78,7 @@ RESET="\033[0m"
 print_with_color() {
     local label=$1
     local value=$2
-    echo -e "${RED}${label}:${RESET}\n    ${value}"
+    echo -e "${RED}${label}:${RESET}\n${value}"
 }
 
 # Display all collected data
