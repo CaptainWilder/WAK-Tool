@@ -90,7 +90,7 @@ print_with_color "CNAME record" "$cname"
 print_with_color "MX record" "$mx"
 print_with_color "SPF" "$txt"
 echo "-----------------------------------------------------------------"
-echo ""
+echo "Loading port check..."
 echo "-------------------------- Port Check ---------------------------"
 #Port Checks
 # Check SSH
@@ -101,8 +101,13 @@ declare -A services=(
     [SMTP]=25
     [DNS]=53
     [HTTP]=80
+    [HTTPS]=443
     [IMAP]=143
     [RDP]=3389
+    [SMB]=445
+    [SNMP]=161
+    [MSSQL]=1433
+    [MYSQL]=3306
 )
 
 for service in "${!services[@]}"; do
