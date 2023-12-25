@@ -4,10 +4,14 @@
 ######DNS Tools########
 #######################
 
+
+#for debug, uncomment echos 
+
 #Prereq Check
+#echo "Checking for prereqs..." #Enable Debug
 install_whois() {
   if which whois >/dev/null; then
-    echo "whois is already installed."
+    echo ""
   else
     echo "whois not found. Installing..."
     if [[ ! -z $(which yum) ]]; then
@@ -15,14 +19,16 @@ install_whois() {
     elif [[ ! -z $(which apt) ]]; then
       sudo apt-get install whois -y
     else
-      echo "Neither yum nor apt is available. Cannot install whois."
+      #echo "Neither yum nor apt is available. Cannot install whois."
       exit 1
     fi
   fi
 }
 
+
 #Install Prereq
 install_whois
+
 
 #Get Input/Argument
 if [ -z "$1" ]; then
@@ -30,8 +36,14 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
+
 DOMAIN="$1"
 
+
+#debug 
+#echo "Loading..."
+
+#DNS Lookups
 #A record lookup and get the IP
 ip=$(dig +short A "$DOMAIN")
 ip_org=$(echo "$ip" | head -n1 )
@@ -54,9 +66,14 @@ txt=$(dig +short TXT "$DOMAIN" | grep spf)
 #WHOIS search and extract the registrar name
 registrar=$(whois "$DOMAIN" | grep -m 1 'Registrar:' | awk '{$1=$1;print}')
 
+
+#debug
+#echo "Got dns..."
+#echo "Loading SSL..."
+
 #HTTPS Check
-if ! curl --output /dev/null --silent --head --fail "https://$DOMAIN"; then
-  echo "HTTPS not enabled or the domain is not reachable. Setting SSL variables to 'no SSL'."
+if ! curl --output /dev/null --silent --head --fail --connect-timeout 5 "https://$DOMAIN"; then
+  echo "HTTPS not enabled or the domain is not reachable."
   ssl_expiry="no SSL"
   ssl_issuer="no SSL"
 else
@@ -64,6 +81,7 @@ else
   ssl_expiry=$(echo "$ssl_output" | grep 'notAfter' | awk -F= '{print $2}')
   ssl_issuer=$(echo "$ssl_output" | grep 'issuer=' | sed -n 's/.*O = \(.*\), CN = .*/\1/p')
 fi
+
 
 #Output
 echo "IP: $ip"
