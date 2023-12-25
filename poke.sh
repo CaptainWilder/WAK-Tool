@@ -82,30 +82,16 @@ else
   ssl_issuer=$(echo "$ssl_output" | grep 'issuer=' | sed -n 's/.*O = \(.*\), CN = .*/\1/p')
 fi
 
-#Format Output
-format_output() {
-    local label=$1
-    local text=$2
-    local indent=25  # Adjust the indent value as needed
-
-    # Print the label
-    echo "$label"
-
-    # Print the text with indentation
-    while IFS= read -r line; do
-        printf "%-${indent}s%s\n" "" "$line"
-    done <<< "$text"
-}
 
 #Output
 echo "----------------------- DNS & SSL Details -----------------------"
-format_output "IP:" "$ip"
-format_output "WebHost:" "$org"
-format_output "Registrar:" "$registrar"
-format_output "CNAME record:" "$cname"
-format_output "MX record:" "$mx"
-format_output "NS records:" "$ns"
-format_output "SPF:" "$txt"
-format_output "SSL Certificate Expiration:" "$ssl_expiry"
-format_output "SSL Certificate Issuer:" "$ssl_issuer"
+echo "IP: \n$ip\n\n"
+echo "WebHost: \n$org\n\n"
+echo "Registrar: \n$registrar\n\n"
+echo "CNAME record: \n$cname\n\n"
+echo "MX record: \n$mx\n\n"
+echo "NS records: \n$ns\n\n"
+echo "SPF: \n$txt\n\n"
+echo "SSL Expiration: \n$ssl_expiry\n\n"
+echo "SSL Issuer: \n$ssl_issuer\n\n"
 echo "---------------------------------------------------------------"
