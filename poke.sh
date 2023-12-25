@@ -5,7 +5,6 @@
 #######################
 
 #Prereq Check
-echo "Checking prerequisites..."
 install_whois() {
   if which whois >/dev/null; then
     echo "whois is already installed."
@@ -33,8 +32,6 @@ fi
 
 DOMAIN="$1"
 
-
-echo "Loading..."
 #A record lookup and get the IP
 ip=$(dig +short A "$DOMAIN")
 ip_org=$(echo "$ip" | head -n1 )
@@ -57,10 +54,16 @@ txt=$(dig +short TXT "$DOMAIN" | grep spf)
 #WHOIS search and extract the registrar name
 registrar=$(whois "$DOMAIN" | grep -m 1 'Registrar:' | awk '{$1=$1;print}')
 
-#SSL certificate expiration and issuer details
-ssl_output=$(echo | openssl s_client -servername "$DOMAIN" -connect "$DOMAIN:443" 2>/dev/null | openssl x509 -noout -dates -issuer)
-ssl_expiry=$(echo "$ssl_output" | grep 'notAfter' | awk -F= '{print $2}')
-ssl_issuer=$(echo "$ssl_output" | grep 'issuer=' | sed -n 's/.*O = \(.*\), CN = .*/\1/p')
+#HTTPS Check
+if ! curl --output /dev/null --silent --head --fail "https://$DOMAIN"; then
+  echo "HTTPS not enabled or the domain is not reachable. Setting SSL variables to 'no SSL'."
+  ssl_expiry="no SSL"
+  ssl_issuer="no SSL"
+else
+  ssl_output=$(echo | openssl s_client -servername "$DOMAIN" -connect "$DOMAIN:443" 2>/dev/null | openssl x509 -noout -dates -issuer)
+  ssl_expiry=$(echo "$ssl_output" | grep 'notAfter' | awk -F= '{print $2}')
+  ssl_issuer=$(echo "$ssl_output" | grep 'issuer=' | sed -n 's/.*O = \(.*\), CN = .*/\1/p')
+fi
 
 #Output
 echo "IP: $ip"
