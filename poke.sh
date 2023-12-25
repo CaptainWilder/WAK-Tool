@@ -55,9 +55,6 @@ txt=$(dig +short TXT "$DOMAIN" | grep spf)
 # Retrieve domain registrar from whois
 registrar=$(whois "$DOMAIN" | grep -m 1 'Registrar:' | awk '{$1=""; print substr($0,2)}')
 
-# Check SSH
-ssh=$(nc -w5 "$DOMAIN" 22 2>&1)
-
 # Check for HTTPS availability
 if ! curl --output /dev/null --silent --head --fail --connect-timeout 5 "https://$DOMAIN"; then
   echo "No HTTPS available, or the domain is not reachable."
@@ -81,7 +78,7 @@ print_with_color() {
     echo -e "${RED}${label}:${RESET}\n${value}"
 }
 
-# Display all collected data
+# Display DNS & SSL collected data
 echo "----------------------- DNS & SSL Details -----------------------"
 print_with_color "WebHost" "$org"
 print_with_color "Registrar" "$registrar"
@@ -92,5 +89,29 @@ print_with_color "NS records" "$ns"
 print_with_color "CNAME record" "$cname"
 print_with_color "MX record" "$mx"
 print_with_color "SPF" "$txt"
-print_with_color "SSH Response" "$ssh"
+echo "-----------------------------------------------------------------"
+echo ""
+echo "-------------------------- Port Check ---------------------------"
+#Port Checks
+# Check SSH
+declare -A services=(
+    [FTP]=21
+    [SSH]=22
+    [Telnet]=23
+    [SMTP]=25
+    [DNS]=53
+    [HTTP]=80
+    [IMAP]=143
+    [RDP]=3389
+)
+
+for service in "${!services[@]}"; do
+    # Perform the netcat operation
+    result=$(nc -z -v -w1 "$DOMAIN" "${services[$service]}" 2>&1)
+    
+    # Check if the result contains "succeeded"
+    if echo "$result" | grep -q "succeeded"; then
+        echo "$service is open"
+    fi
+done
 echo "-----------------------------------------------------------------"
