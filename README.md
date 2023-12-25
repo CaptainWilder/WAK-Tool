@@ -8,3 +8,8 @@ Wilder Army Knife toolkit
 * Documentation:  Coming soon
 * Source:         https://github.com/CaptainWilder/WAK-Tool
 * License:        idk bro, I'm not a lawyer
+
+
+
+DNS Tool = poke.sh
+Windows repair tool = winfix.ps1
