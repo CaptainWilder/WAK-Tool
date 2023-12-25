@@ -49,7 +49,7 @@ ip=$(dig +short A "$DOMAIN")
 ip_org=$(echo "$ip" | head -n1 )
 
 #Whois lookup on the IP and extract the Organization field
-org=$(whois "$ip_org" | grep 'Organization:' | awk '{print $2}')
+org=$(whois "$ip_org" | grep 'Organization:' | awk '{$1=""; print substr($0,2)}')
 
 #MX record lookup
 mx=$(dig +short MX "$DOMAIN")
