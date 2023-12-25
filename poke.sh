@@ -111,12 +111,13 @@ declare -A services=(
 )
 
 for service in "${!services[@]}"; do
-    # Perform the netcat operation
-    result=$(nc -z -v -w1 "$DOMAIN" "${services[$service]}" 2>&1)
-    
-    # Check if the result contains "succeeded"
-    if echo "$result" | grep -q "succeeded"; then
-        echo "$service is open"
-    fi
+    (
+        result=$(nc -z -v -w 1 "$DOMAIN" "${services[$service]}" 2>&1)
+        if echo "$result" | grep -q "succeeded"; then
+            echo "$service is open"
+        fi
+    ) &
 done
+
+wait
 echo "-----------------------------------------------------------------"
