@@ -49,7 +49,7 @@ ip=$(dig +short A "$DOMAIN")
 ip_org=$(echo "$ip" | head -n1 )
 
 #Whois lookup on the IP and extract the Organization field
-org=$(whois "$ip_org" | grep 'Organization:' | awk '{$1=""; print substr($0,2)}')
+org=$(whois "$ip_org" | grep 'Organization:' | awk '{print $2}')
 
 #MX record lookup
 mx=$(dig +short MX "$DOMAIN")
@@ -64,7 +64,7 @@ cname=$(dig +short CNAME "www.$DOMAIN")
 txt=$(dig +short TXT "$DOMAIN" | grep spf)
 
 #WHOIS search and extract the registrar name
-registrar=$(whois "$DOMAIN" | grep -m 1 'Registrar:' | awk '{$1=$1;print}')
+registrar=$(whois "$DOMAIN" | grep -m 1 'Registrar:' | awk '{$1=""; print substr($0,2)}')
 
 
 #debug
