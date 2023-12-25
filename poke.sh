@@ -11,7 +11,7 @@
 #echo "Checking for prereqs..." #Enable Debug
 install_whois() {
   if which whois >/dev/null; then
-    echo ""
+    echo "Loading..."
   else
     echo "whois not found. Installing..."
     if [[ ! -z $(which yum) ]]; then
