@@ -82,25 +82,22 @@ else
   ssl_issuer=$(echo "$ssl_output" | grep 'issuer=' | sed -n 's/.*O = \(.*\), CN = .*/\1/p')
 fi
 
-
-#Function to format multiline output
+#Format Output
 format_output() {
     local label=$1
     local text=$2
-    local first_line=true
+    local indent=25  # Adjust the indent value as needed
 
-    # Read each line of the variable
+    # Print the label
+    echo "$label"
+
+    # Print the text with indentation
     while IFS= read -r line; do
-        if [ "$first_line" = true ] ; then
-            printf "%-25s %s\n" "$label" "$line"
-            first_line=false
-        else
-            printf "%-25s %s\n" "" "$line"
-        fi
+        printf "%-${indent}s%s\n" "" "$line"
     done <<< "$text"
 }
 
-# Output
+#Output
 echo "----------------------- DNS & SSL Details -----------------------"
 format_output "IP:" "$ip"
 format_output "WebHost:" "$org"
@@ -109,6 +106,6 @@ format_output "CNAME record:" "$cname"
 format_output "MX record:" "$mx"
 format_output "NS records:" "$ns"
 format_output "SPF:" "$txt"
-format_output "SSL Expiration:" "$ssl_expiry"
-format_output "SSL Issuer:" "$ssl_issuer"
-echo "----------------------------------------------------------------"
+format_output "SSL Certificate Expiration:" "$ssl_expiry"
+format_output "SSL Certificate Issuer:" "$ssl_issuer"
+echo "---------------------------------------------------------------"
