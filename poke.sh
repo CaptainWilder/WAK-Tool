@@ -57,7 +57,6 @@ registrar=$(whois "$DOMAIN" | grep -m 1 'Registrar:' | awk '{$1=""; print substr
 
 # Check for HTTPS availability
 if ! curl --output /dev/null --silent --head --fail --connect-timeout 5 "https://$DOMAIN"; then
-  echo "No HTTPS available, or the domain is not reachable."
   ssl_expiry="no SSL"
   ssl_issuer="no SSL"
 else
